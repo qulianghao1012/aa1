@@ -20,6 +20,8 @@ public class Student {
     @TableField(value = "cname")
     private String cname;
 
+    
+    //my first
     public int getNumber() {
         return number;
     }
