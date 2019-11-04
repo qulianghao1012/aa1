@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huayu.ssm.mapper.StudentMapper">
+<!--模糊查询所有-->
+<!--    <select id="queryAll" resultMap="stuResultMap">-->
+<!--        select * from student-->
+<!--        <where>-->
+<!--            <if test="null!=name and name!=''">-->
+<!--                and name like '%${name}%'-->
+<!--            </if>-->
+<!--            <if test="sex != null and sex != ''">-->
+<!--                and sex = #{sex}-->
+<!--            </if>-->
+<!--            <if test="cid != null and cid != 0">-->
+<!--                and cid = #{cid}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+
+    <select id="queryAll" parameterType="string" resultType="student">
+        select s.*,g.cname from student s left join grade g on s.cid = g.id
+        <where>
+            <if test="name!=null and name!=''">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex=#{sex}
+            </if>
+            <if test="cid!=null and cid!=''">
+                and cid = #{cid}
+            </if>
+        </where>
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="queryCount" resultType="int">
+        select count(*) from student
+    </select>
+<!--嵌套查询班级-->
+    <resultMap id="stuResultMap" type="student">
+        <association property="grade" column="cid" javaType="grade" select="query_classes"></association>
+    </resultMap>
+    <!--通过ID查一条-->
+    <select id="queryById" parameterType="int" resultType="student">
+        select * from student where stuno = #{value}
+    </select>
+    <!--添加-->
+    <insert id="add" parameterType="student">
+        insert into student (name,sex,age,cid) values (#{name},#{sex},#{age},#{cid})
+    </insert>
+    <!--修改-->
+    <update id="update" parameterType="student" >
+        update student set name = #{name},sex = #{sex},age = #{age},cid = #{cid} where stuno = #{stuno}
+    </update>
+
+    <!--删除-->
+    <delete id="delete" parameterType="int">
+        delete from student where stuno = #{value}
+    </delete>
+
+<!--0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000-->
+
+    <select id="query_classes" parameterType="int" resultType="grade">
+        SELECT * from grade where id=#{VALUE}
+    </select>
+
+    <select id="queryAllGrade" resultType="grade">
+        select * from grade
+    </select>
+</mapper>
